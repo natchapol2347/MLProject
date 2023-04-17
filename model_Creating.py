@@ -17,21 +17,27 @@ def load_iam_dataset(data_path, img_height, img_width):
             if line.startswith('#'):
                 continue
             parts = line.strip().split(' ')
-            file_path = os.path.join(data_path, parts[0] + '.png')
-            
+            part1 = parts[0].split('-')
+            file_path = os.path.join(data_path, part1[0])
+            file_path = os.path.join(file_path, part1[0]+'-'+part1[1])
+            file_path = os.path.join(file_path, parts[0] + '.png')
             if not os.path.exists(file_path):
                 continue
-            
+            # print(file_path)
             img = cv2.imread(file_path, cv2.IMREAD_GRAYSCALE)
-            img = cv2.resize(img, (img_width, img_height))
-            images.append(img)
-            labels.append(parts[-1])
+            # print(img_width,img_height)
+            try:
+                img = cv2.resize(img, (img_width, img_height))
+                images.append(img)
+                labels.append(parts[-1])
+            except Exception as e:
+                print(e)
 
     images = np.array(images).reshape(-1, img_height, img_width, 1).astype('float32') / 255
     return images, labels
 
 # Set your IAM dataset path
-iam_data_path = "/path/to/iam_dataset"
+iam_data_path = "words"
 
 # Set your desired image height and width
 img_height = 64
@@ -39,6 +45,7 @@ img_width = 128
 
 # Load and preprocess the dataset
 images, labels = load_iam_dataset(iam_data_path, img_height, img_width)
+print(images)
 
 # Encode the labels
 label_encoder = LabelEncoder()

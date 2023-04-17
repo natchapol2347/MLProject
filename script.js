@@ -24,6 +24,7 @@ captureButton.addEventListener("click", () => {
 
         try {
             const response = await axios.post("http://127.0.0.1:5000/api/recognize", formData);
+            console.log(response.data)
             resultParagraph.textContent = `Predicted word: ${response.data.word}`;
         } catch (err) {
             console.error("Error calling Flask API: ", err);
