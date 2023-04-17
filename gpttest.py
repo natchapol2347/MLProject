@@ -63,9 +63,9 @@ def edit_image(prompt):
     image_url = response['data'][0]['url']
 
     return image_url
-def alternatives():
+def alternatives(image_path):
     response = openai.Image.create_variation(
-    image=formatImage("./images/test_image.jpg"),
+    image=formatImage(image_path),
     n=1,
     size="1024x1024"
     )
@@ -98,7 +98,7 @@ def try_image():
     img.show()
     if('N' not in to_alt or 'n' not in to_alt):
         img.close()
-        alternatives()
+        alternatives("./images/test_image.jpg")
 
 
 def try_edit_image():
@@ -117,9 +117,18 @@ def try_edit_image():
      
      
 def main():
-    #  try_edit_image()
-   try_image()
+#    try_edit_image()
+#    try_image()
 #    try_message()
+#    alternatives(local_path)
+    options = input("Please select: \n 1: Message reply prompt \n 2: New Image from prompt \n 3: Edit Image from prompt \n")
+    match options:
+        case '1':
+            try_message()
+        case '2': 
+            try_image()
+        case '3': 
+            try_edit_image()
 
 if __name__ == "__main__":
     main()
