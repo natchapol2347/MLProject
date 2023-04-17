@@ -1,0 +1,26 @@
+{
+  "name": "mlproject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/natchapol2347/MLProject.git"
+  },
+  "keywords": [
+    "kuy"
+  ],
+  "author": "ohm",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/natchapol2347/MLProject/issues"
+  },
+  "homepage": "https://github.com/natchapol2347/MLProject#readme",
+  "dependencies": {
+    "axios": "^1.3.5",
+    "mlproject": "file:"
+  }
+}
