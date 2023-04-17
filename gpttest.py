@@ -6,7 +6,6 @@ import requests
 from io import BytesIO
 
 
-
 load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
@@ -41,6 +40,32 @@ def generate_image(prompt):
 
         return image_url
 
+def formatImage(path):
+    image = Image.open(path)
+    width = 1024
+    height =1024
+    image = image.resize((width, height))
+    byte_stream = BytesIO()
+    image.save(byte_stream, format='PNG')
+    byte_array = byte_stream.getvalue()
+    return byte_array
+     
+
+def edit_image(prompt):
+    response = openai.Image.create_edit(
+         
+    image=formatImage("./images/static_image.png"),
+    mask=formatImage("./images/mask.png"),
+    prompt=prompt,
+    n=1,
+    size="1024x1024"
+    )
+    image_url = response['data'][0]['url']
+
+    return image_url
+
+
+
 def try_message():
     input_string = input("Prompt me:")
     reply = get_reply(input_string)
@@ -61,10 +86,25 @@ def try_image():
     # Save the image to a directory
     img.save("./images/test_image.jpg")
     img.show()
+
+
+def try_edit_image():
+    input_string = input("Edit prompt:")
+    reply = edit_image(input_string)
+    # URL of the generated image
+    url = reply
+    # Send a GET request to the URL and get the response
+    response = requests.get(url)
+    # Open the image using Pillow's Image module
+    img = Image.open(BytesIO(response.content))
+    # Save the image to a directory
+    img.save("./images/editted.jpg")
+    img.show()
      
      
 def main():
-   try_image()
+     try_edit_image()
+#    try_image()
 #    try_message()
 
 if __name__ == "__main__":
