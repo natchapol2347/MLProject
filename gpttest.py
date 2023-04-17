@@ -63,7 +63,16 @@ def edit_image(prompt):
     image_url = response['data'][0]['url']
 
     return image_url
-
+def alternatives():
+    response = openai.Image.create_variation(
+    image=formatImage("./images/test_image.jpg"),
+    n=1,
+    size="1024x1024"
+    )
+    image_url = response['data'][0]['url']
+    response = requests.get(image_url)
+    img = Image.open(BytesIO(response.content))
+    img.show()
 
 
 def try_message():
@@ -73,6 +82,7 @@ def try_message():
      
 def try_image():
     input_string = input("Prompt me:")
+    to_alt = input("Do you want an alternative too? Y/N ")
     reply = generate_image(input_string)
     # URL of the generated image
     url = reply
@@ -86,6 +96,9 @@ def try_image():
     # Save the image to a directory
     img.save("./images/test_image.jpg")
     img.show()
+    if('N' not in to_alt or 'n' not in to_alt):
+        img.close()
+        alternatives()
 
 
 def try_edit_image():
@@ -100,11 +113,12 @@ def try_edit_image():
     # Save the image to a directory
     img.save("./images/editted.jpg")
     img.show()
+    
      
      
 def main():
-     try_edit_image()
-#    try_image()
+    #  try_edit_image()
+   try_image()
 #    try_message()
 
 if __name__ == "__main__":
