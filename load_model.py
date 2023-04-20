@@ -47,6 +47,7 @@ def get_paths_and_gts(partition_split_file):
     return paths_and_gts
 
 def add_padding(img, old_w, old_h, new_w, new_h):
+    # print(img.shape)
     h1, h2 = int((new_h - old_h) / 2), int((new_h - old_h) / 2) + old_h
     w1, w2 = int((new_w - old_w) / 2), int((new_w - old_w) / 2) + old_w
     img_pad = np.ones([new_h, new_w, 3]) * 255
@@ -80,7 +81,11 @@ def fix_size(img, target_w, target_h):
 def preprocess2(path, img_w, img_h):
     """ Pre-processing image for predicting """
     # try:
-    img = cv2.imdecode(path, cv2.IMREAD_GRAYSCALE)
+    img = cv2.imdecode(path, cv2.IMREAD_COLOR)
+    print(img.shape)
+    # cv2.imshow('Image', img)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
     img = fix_size(img, img_w, img_h)
 
     img = np.clip(img, 0, 255)
@@ -202,6 +207,9 @@ def processed_image_from_data(test_image_path):
     test_images_processed = []
     # original_test_texts = []
     temp_processed_image = preprocess2(path=test_image_path, img_w=128, img_h=64)
+    # cv2.imshow('Image', temp_processed_image)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
     test_images_processed.append(temp_processed_image.T)
     # original_test_texts.append(original_test_text)
     test_images_processed = np.array(test_images_processed)
