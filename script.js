@@ -2,9 +2,15 @@ const webcam = document.getElementById("webcam");
 const canvas = document.getElementById("canvas");
 const captureButton = document.getElementById("capture");
 const resultParagraph = document.getElementById("result");
+const resultPoem = document.getElementById("results");
 
 // Access the user's webcam
-navigator.mediaDevices.getUserMedia({ video: true })
+navigator.mediaDevices.getUserMedia({ 
+  video: { 
+    width: 850, 
+    height: 480 
+} 
+ })
     .then(stream => {
         webcam.srcObject = stream;
         webcam.addEventListener("loadedmetadata", () => {
@@ -21,12 +27,6 @@ captureButton.addEventListener("click", () => {
     var link = document.createElement("a");
     link.download = "image.png";
 
-    // canvas.toBlob(function(blob){
-    //   link.href = URL.createObjectURL(blob);
-    //   console.log(blob);
-    //   console.log(link.href); // this line should be here
-    //   window.open(link.href)
-    // },'image/png');
     function convertblobtobytes(blob) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -38,40 +38,6 @@ captureButton.addEventListener("click", () => {
         reader.readAsArrayBuffer(blob);
       });
     }
-    // canvas.toBlob(async blob => {
-
-    //     // console.log('blob generated:', blob);
-        
-    //     const formData = {}
-    //     link.href = URL.createObjectURL(blob);
-    //     console.log(blob);
-    //     console.log(link.href); // this line should be here
-    //     // window.open(link.href)
-    //     let byte = await convertblobtobytes(blob);
-    //     console.log(typeof(byte));
-    //     const decoder = new TextDecoder();
-    //     const str = decoder.decode(byte);
-    //     // console.log(str);
-    //     // link.click()
-    //     const byteString = btoa(String.fromCharCode.apply(null, byte));
-    //     byte = `${byte}`
-    //     console.log(byteString)
-    //     formData.image = byteString;
-    //     const header = {
-    //         'Content-Type': 'multipart/form-data'
-    //     }
-    //       const config = { headers: header }
-    //       console.log('formData:', formData);
-    //     try {
-    //         const response = await axios.post("http://127.0.0.1:5000/api/recognize", formData,config);
-    //         console.log(response.data)
-    //         resultParagraph.textContent = `Predicted word: ${response.data.word}`;
-    //     } catch (err) {
-    //         console.error("Error calling Flask API: ", err);
-    //         resultParagraph.textContent = "Error: Failed to recognize the word";
-    //     }
-    // });
-
     canvas.toBlob(async blob => {
       const reader = new FileReader();
       reader.readAsArrayBuffer(blob);
@@ -86,6 +52,7 @@ captureButton.addEventListener("click", () => {
           const response = await axios.post("http://127.0.0.1:5000/api/recognize", payload,config);
           console.log(response.data)
           resultParagraph.textContent = `Predicted word: ${response.data.word}`;
+          resultPoem.textContent = `Poem: ${response.data.poem}`;
       } catch (err) {
           console.error("Error calling Flask API: ", err);
           resultParagraph.textContent = "Error: Failed to recognize the word";

@@ -77,6 +77,7 @@ def alternatives(image_path):
 
 def try_message():
     input_string = input("Prompt me:")
+    input_string = "make me a poem with this word:" + input_string
     reply = get_reply(input_string)
     print(reply)
      

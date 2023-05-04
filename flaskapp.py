@@ -9,6 +9,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import load_model as lm
 from urllib.request import urlopen
+import gpttest as gpt
 
 model = lm.load_model()
 app = Flask(__name__)
@@ -25,6 +26,7 @@ def recognize():
     img_array = np.frombuffer(picbyte, np.uint8)
     # img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
     # print(img.shape)
+    # image = lm.processed_image_from_pic(r"C:\Users\USER\Pictures\Camera Roll\ohmha.png")
     # image = lm.processed_image_from_pic(r"C:\Users\USER\MLProject\words\l04\l04-174\l04-174-01-03.png")
     image = lm.processed_image_from_data(img_array)
     # print(image)
@@ -55,8 +57,8 @@ def recognize():
     # img = lm.processed_image_from_pic(image_data)
     # predicted_word = lm.pred(img)
     predicted_word= pred
-
-    return {"word": predicted_word}
+    poem = gpt.get_reply("make me a poem with this word as a keyword: "+predicted_word)
+    return {"word": predicted_word, "poem":poem}
 
 if __name__ == "__main__":
     app.run(debug=True)
