@@ -1,22 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Handwriting Recognition Poem Generator</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./node_modules/cropperjs/dist/cropper.min.css">
 </head>
+
 <body>
     <div class="container">
         <h1>Handwriting Recognition Poem Generator</h1>
         <video id="webcam" autoplay></video>
         <canvas id="canvas" width="640" height="480"></canvas><br>
-        <button id="capture">Capture</button>
+        <button id="capture" style="margin-bottom: 20px;">Capture</button>
+
+        <div>
+            <img id="capimage">
+        </div>
+
+        <br>
+        <div style="margin-bottom: 20px;">
+            <button id="crop">Crop</button>
+            <button id="applybutton">Apply</button>
+            <button id="generate">Generate</button>
+        </div>
+
+
         <p id="result"></p>
         <p id="results"></p>
+
+
+
+
+
+
+
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./node_modules/cropperjs/dist/cropper.min.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>
