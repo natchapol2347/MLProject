@@ -16,7 +16,7 @@ if openai_api_key is None:
 # Replace 'your_api_key_here' with your actual API key
 openai.api_key = openai_api_key
 
-def get_reply(prompt, model="text-davinci-002", max_tokens=50):
+def get_reply(prompt, model="text-davinci-002", max_tokens=100):
     response = openai.Completion.create(
         engine=model,
         prompt=prompt,

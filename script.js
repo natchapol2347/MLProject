@@ -47,55 +47,49 @@ captureButton.addEventListener("click", () => {
 
 
 
-generateButton.addEventListener("click", () => {
+generateButton.addEventListener("click", async () => {
+  // Get ArrayBuffer Image
+  const response = await fetch(newImage.src);
+  const arrayBuffer = await response.arrayBuffer();
+  const byteArray = new Uint8Array(arrayBuffer);
+  console.log('Byte Array:', byteArray);
 
-  function convertblobtobytes(blob) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const bytes = new Uint8Array(reader.result);
-        resolve(bytes);
-      };
-      reader.onerror = reject;
-      reader.readAsArrayBuffer(blob);
-    });
+  // Convert byte array to base64-encoded string
+  const base64String = await convertByteArrayToBase64(byteArray);
+
+  const payload = { image: base64String };
+  const header = { 'Content-Type': 'multipart/form-data' };
+  const config = { headers: header };
+  console.log('formData:', payload);
+
+  try {
+    const response = await axios.post("http://127.0.0.1:5000/api/recognize", payload, config);
+    console.log(response.data);
+    resultParagraph.textContent = `Predicted word: ${response.data.word}`;
+    resultPoem.textContent = `Poem: ${response.data.poem}`;
+  } catch (err) {
+    console.error("Error calling Flask API: ", err);
+    resultParagraph.textContent = "Error: Failed to recognize the word";
   }
-
-  //Get ArrayBuffer Image
-  arrayBuffer = fetch(newImage.src)
-    .then(function (result) {
-      return result.arrayBuffer();
-    })
-  console.log("arraybuffer ", arrayBuffer);
-
-
-
-  // Ohm's code
-
-  // canvas.toBlob(async blob => {
-  //   const reader = new FileReader();
-  //   reader.readAsArrayBuffer(blob);
-  //   reader.onload = async () => {
-  //     console.log('reader.result: ', reader.result);
-  //     const byteArray = new Uint8Array(reader.result);
-  //     const byteString = btoa(String.fromCharCode.apply(null, byteArray));
-  //     const payload = { image: byteString };
-  //     const header = { 'Content-Type': 'multipart/form-data' }
-  //     const config = { headers: header }
-  //     console.log('formData:', payload);
-  //     try {
-  //       const response = await axios.post("http://127.0.0.1:5000/api/recognize", payload, config);
-  //       console.log(response.data)
-  //       resultParagraph.textContent = `Predicted word: ${response.data.word}`;
-  //       resultPoem.textContent = `Poem: ${response.data.poem}`;
-  //     } catch (err) {
-  //       console.error("Error calling Flask API: ", err);
-  //       resultParagraph.textContent = "Error: Failed to recognize the word";
-  //     }
-  //   }
-  // }, 'image/jpeg', 0.95);
-
 });
+
+function convertByteArrayToBase64(byteArray) {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.onloadend = function () {
+      const base64String = fileReader.result.split(",")[1];
+      resolve(base64String);
+    };
+    fileReader.onerror = function (error) {
+      reject(error);
+    };
+    fileReader.readAsDataURL(new Blob([byteArray]));
+  });
+}
+
+
+
+
 
 cropButton.addEventListener("click", () => {
 
